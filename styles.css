@@ -1,0 +1,319 @@
+:root {
+  --blue-900: #0f274a;
+  --blue-700: #1b4d8f;
+  --blue-500: #2f6fc0;
+  --blue-100: #e8f0fb;
+  --white: #ffffff;
+  --black: #121212;
+  --gray-500: #6d7684;
+  --ok: #1f8d4f;
+  --pending: #b07b00;
+  --error: #b00020;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top right, #244a82, #0b1a32 55%);
+  color: var(--black);
+  min-height: 100vh;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.login-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.login-card {
+  width: min(420px, 100%);
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 24px;
+  padding: 1.2rem;
+  box-shadow: 0 14px 30px rgba(7, 18, 37, 0.35);
+  display: grid;
+  gap: 0.7rem;
+}
+
+.login-card h1 {
+  margin: 0;
+  color: var(--blue-900);
+}
+
+.login-card p {
+  margin: 0;
+  color: #425068;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+input,
+select,
+button {
+  border: 1px solid #b6c9ea;
+  border-radius: 999px;
+  padding: 0.5rem 0.85rem;
+  background: var(--white);
+  font-size: 0.92rem;
+}
+
+button {
+  background: var(--blue-500);
+  color: var(--white);
+  border-color: #7da6df;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(1.05);
+}
+
+.login-help {
+  font-size: 0.84rem;
+  color: #5d6d88;
+}
+
+.login-message {
+  color: var(--error);
+  font-weight: 600;
+  min-height: 1.1rem;
+}
+
+.topbar {
+  background: linear-gradient(135deg, var(--blue-900), #081123);
+  color: var(--white);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem 1.5rem;
+  border-bottom-left-radius: 26px;
+  border-bottom-right-radius: 26px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+.topbar h1 {
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+.topbar p {
+  margin: 0.15rem 0 0;
+  color: #cfdeff;
+}
+
+.session-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+  width: min(580px, 100%);
+}
+
+.active-user {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+main {
+  padding: 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 22px;
+  padding: 1rem;
+  box-shadow: 0 10px 22px rgba(8, 20, 38, 0.2);
+}
+
+.section-header h2 {
+  margin: 0 0 0.2rem;
+  color: var(--blue-900);
+}
+
+.section-header p {
+  margin-top: 0;
+  color: var(--gray-500);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.55rem;
+  min-width: 900px;
+}
+
+thead th {
+  background: var(--blue-100);
+  color: var(--blue-900);
+  padding: 0.75rem;
+  text-align: center;
+  border-radius: 999px;
+  font-size: 0.92rem;
+}
+
+tbody td {
+  background: #f6f9ff;
+  padding: 0.7rem;
+  vertical-align: top;
+  border: 1px solid #dce7fa;
+}
+
+tbody td:first-child,
+tbody td:last-child {
+  border-radius: 16px;
+}
+
+.waiter-name-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 150px;
+}
+
+.waiter-name-input {
+  border-radius: 12px;
+  border: 1px solid #bbd0f2;
+}
+
+.cell-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 145px;
+}
+
+.waiter-status,
+.admin-check-label,
+.state-pill {
+  font-size: 0.84rem;
+}
+
+.admin-check-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+.state-pill {
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  width: fit-content;
+  font-weight: 700;
+}
+
+.state-pill.completed {
+  background: rgba(31, 141, 79, 0.14);
+  color: var(--ok);
+}
+
+.state-pill.pending {
+  background: rgba(176, 123, 0, 0.14);
+  color: var(--pending);
+}
+
+.pending-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.7rem;
+}
+
+.pending-card {
+  background: linear-gradient(180deg, #ffffff, #f0f5ff);
+  border: 1px solid #dce8ff;
+  border-radius: 18px;
+  padding: 0.75rem;
+}
+
+.pending-card h3 {
+  margin: 0 0 0.35rem;
+  color: var(--blue-700);
+  font-size: 1rem;
+}
+
+.pending-card ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: #3f4f66;
+  font-size: 0.88rem;
+}
+
+.pending-card .ok-day {
+  color: var(--ok);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 950px) {
+  .topbar {
+    flex-direction: column;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+
+  .session-panel {
+    width: 100%;
+  }
+
+  main {
+    padding: 0.85rem;
+  }
+}
+
+@media (max-width: 680px) {
+  .session-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    border-radius: 18px;
+    padding: 0.8rem;
+  }
+
+  .section-header h2 {
+    font-size: 1.1rem;
+  }
+
+  thead th,
+  tbody td {
+    padding: 0.5rem;
+  }
+
+  .cell-content {
+    min-width: 128px;
+    gap: 0.35rem;
+  }
+
+  .waiter-status,
+  .admin-check-label,
+  .state-pill {
+    font-size: 0.78rem;
+  }
+}
