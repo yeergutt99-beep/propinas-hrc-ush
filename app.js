@@ -1,4 +1,6 @@
 const STORAGE_KEY = "hrc-tip-checklist-v1";
+
+const ADMIN_USERNAME = "admin9410";
 const DEFAULT_WAITERS = [
   "Camarero 1",
   "Camarero 2",
@@ -13,9 +15,19 @@ const DEFAULT_WAITERS = [
 ];
 const DAY_LABELS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
+codex/create-weekly-checklist-page-for-users-ubp01n
+const loginScreen = document.getElementById("loginScreen");
+const appShell = document.getElementById("appShell");
+const loginInput = document.getElementById("loginInput");
+const loginBtn = document.getElementById("loginBtn");
+const loginMessage = document.getElementById("loginMessage");
+const weekPicker = document.getElementById("weekPicker");
+const logoutBtn = document.getElementById("logoutBtn");
+const activeUserPill = document.getElementById("activeUserPill");
 const weekPicker = document.getElementById("weekPicker");
 const roleSelect = document.getElementById("roleSelect");
 const userSelect = document.getElementById("userSelect");
+reservas-hard-rock
 const tableHead = document.querySelector("#checklistTable thead");
 const tableBody = document.querySelector("#checklistTable tbody");
 const pendingGrid = document.getElementById("pendingGrid");
@@ -23,6 +35,7 @@ const dayCellTemplate = document.getElementById("dayCellTemplate");
 
 const state = {
   data: loadState(),
+  session: null,
 };
 
 function getCurrentWeekValue() {
@@ -35,6 +48,13 @@ function getCurrentWeekValue() {
   return `${temp.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
 }
 
+
+function normalizeName(value) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
 function loadState() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (raw) {
@@ -69,6 +89,28 @@ function ensureWeekData(weekId) {
   }
 }
 
+
+function findWaiterByTypedName(name) {
+  const normalizedTyped = normalizeName(name);
+  return state.data.waiters.find((waiter) => normalizeName(waiter.name) === normalizedTyped);
+}
+
+function updateSessionUI() {
+  if (!state.session) {
+    loginScreen.classList.remove("hidden");
+    appShell.classList.add("hidden");
+    return;
+  }
+
+  loginScreen.classList.add("hidden");
+  appShell.classList.remove("hidden");
+
+  if (state.session.role === "admin") {
+    activeUserPill.textContent = `Sesión activa: Administrador (${ADMIN_USERNAME})`;
+    return;
+  }
+
+  activeUserPill.textContent = `Sesión activa: ${state.session.name}`;
 function syncUserSelect() {
   userSelect.innerHTML = "";
   const isAdmin = roleSelect.value === "admin";
@@ -107,6 +149,13 @@ function buildTableHead() {
   tableHead.append(tr);
 }
 
+function canEditWaiterRow(waiterId) {
+  return state.session?.role === "camarero" && state.session.waiterId === waiterId;
+}
+
+function isAdmin() {
+  return state.session?.role === "admin";
+=======
 function isWaiterCurrentRow(waiterId) {
   return roleSelect.value === "camarero" && userSelect.value === waiterId;
 }
@@ -148,6 +197,8 @@ function updatePendingGrid(weekId) {
 }
 
 function renderWeek() {
+  if (!state.session) return;
+
   const weekId = weekPicker.value;
   ensureWeekData(weekId);
 
@@ -165,15 +216,21 @@ function renderWeek() {
     const nameWrap = document.createElement("div");
     nameWrap.className = "waiter-name-wrap";
 
-    if (roleSelect.value === "admin") {
+    if (isAdmin()) {
+
       const input = document.createElement("input");
       input.className = "waiter-name-input";
       input.value = waiter.name;
       input.addEventListener("change", () => {
         waiter.name = input.value.trim() || waiter.name;
+
+        saveState();
+        updatePendingGrid(weekId);
+        updateSessionUI();
         syncUserSelect();
         saveState();
         renderWeek();
+
       });
       nameWrap.append(input);
     } else {
@@ -197,11 +254,9 @@ function renderWeek() {
       statusSelect.value = cellState.waiterStatus;
       adminCheck.checked = !!cellState.adminApproved;
 
-      const canEditWaiterCell = isWaiterCurrentRow(waiter.id);
+      const canEditWaiterCell = canEditWaiterRow(waiter.id);
       statusSelect.disabled = !canEditWaiterCell;
-
-      const canEditAdmin = roleSelect.value !== "admin";
-      adminCheck.disabled = canEditAdmin;
+      adminCheck.disabled = !isAdmin();
 
       statusSelect.addEventListener("change", () => {
         if (!canEditWaiterCell) return;
@@ -211,7 +266,8 @@ function renderWeek() {
       });
 
       adminCheck.addEventListener("change", () => {
-        if (canEditAdmin) return;
+
+        if (!isAdmin()) return;
         cellState.adminApproved = adminCheck.checked;
         saveState();
         renderWeek();
@@ -233,20 +289,58 @@ function renderWeek() {
   updatePendingGrid(weekId);
 }
 
+function login() {
+  const typedName = loginInput.value.trim();
+
+  if (!typedName) {
+    loginMessage.textContent = "Ingresá un usuario para continuar.";
+    return;
+  }
+
+  if (typedName === ADMIN_USERNAME) {
+    state.session = { role: "admin", name: ADMIN_USERNAME };
+    loginMessage.textContent = "";
+    updateSessionUI();
+    renderWeek();
+    return;
+  }
+
+  const waiter = findWaiterByTypedName(typedName);
+  if (!waiter) {
+    loginMessage.textContent = "Usuario inválido. Usá admin9410 o un nombre exacto de camarero.";
+    state.session = null;
+    updateSessionUI();
+    return;
+  }
+
+  state.session = { role: "camarero", waiterId: waiter.id, name: waiter.name };
+  loginMessage.textContent = "";
+  loginInput.value = waiter.name;
+  updateSessionUI();
+  renderWeek();
+}
+
+function logout() {
+  state.session = null;
+  loginInput.value = "";
+  loginMessage.textContent = "";
+  updateSessionUI();
+}
+
 function init() {
   weekPicker.value = getCurrentWeekValue();
   buildTableHead();
-  syncUserSelect();
-  renderWeek();
+  updateSessionUI();
 
   weekPicker.addEventListener("change", renderWeek);
-
-  roleSelect.addEventListener("change", () => {
-    syncUserSelect();
-    renderWeek();
+  loginBtn.addEventListener("click", login);
+  logoutBtn.addEventListener("click", logout);
+  loginInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      login();
+    }
   });
 
-  userSelect.addEventListener("change", renderWeek);
 }
 
 init();
