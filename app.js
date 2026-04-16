@@ -1,4 +1,5 @@
 const STORAGE_KEY = "hrc-tip-checklist-v1";
+
 const ADMIN_USERNAME = "admin9410";
 const DEFAULT_WAITERS = [
   "Camarero 1",
@@ -14,6 +15,7 @@ const DEFAULT_WAITERS = [
 ];
 const DAY_LABELS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 
+codex/create-weekly-checklist-page-for-users-ubp01n
 const loginScreen = document.getElementById("loginScreen");
 const appShell = document.getElementById("appShell");
 const loginInput = document.getElementById("loginInput");
@@ -22,6 +24,10 @@ const loginMessage = document.getElementById("loginMessage");
 const weekPicker = document.getElementById("weekPicker");
 const logoutBtn = document.getElementById("logoutBtn");
 const activeUserPill = document.getElementById("activeUserPill");
+const weekPicker = document.getElementById("weekPicker");
+const roleSelect = document.getElementById("roleSelect");
+const userSelect = document.getElementById("userSelect");
+reservas-hard-rock
 const tableHead = document.querySelector("#checklistTable thead");
 const tableBody = document.querySelector("#checklistTable tbody");
 const pendingGrid = document.getElementById("pendingGrid");
@@ -42,14 +48,13 @@ function getCurrentWeekValue() {
   return `${temp.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
 }
 
+
 function normalizeName(value) {
   return value
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .trim()
     .toLowerCase();
-}
-
 function loadState() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (raw) {
@@ -84,6 +89,7 @@ function ensureWeekData(weekId) {
   }
 }
 
+
 function findWaiterByTypedName(name) {
   const normalizedTyped = normalizeName(name);
   return state.data.waiters.find((waiter) => normalizeName(waiter.name) === normalizedTyped);
@@ -105,6 +111,26 @@ function updateSessionUI() {
   }
 
   activeUserPill.textContent = `Sesión activa: ${state.session.name}`;
+function syncUserSelect() {
+  userSelect.innerHTML = "";
+  const isAdmin = roleSelect.value === "admin";
+
+  if (isAdmin) {
+    const adminOption = document.createElement("option");
+    adminOption.value = "admin-main";
+    adminOption.textContent = "Administrador";
+    userSelect.append(adminOption);
+    userSelect.disabled = true;
+    return;
+  }
+
+  state.data.waiters.forEach((waiter) => {
+    const option = document.createElement("option");
+    option.value = waiter.id;
+    option.textContent = waiter.name;
+    userSelect.append(option);
+  });
+  userSelect.disabled = false;
 }
 
 function buildTableHead() {
@@ -129,6 +155,9 @@ function canEditWaiterRow(waiterId) {
 
 function isAdmin() {
   return state.session?.role === "admin";
+=======
+function isWaiterCurrentRow(waiterId) {
+  return roleSelect.value === "camarero" && userSelect.value === waiterId;
 }
 
 function updatePendingGrid(weekId) {
@@ -188,14 +217,20 @@ function renderWeek() {
     nameWrap.className = "waiter-name-wrap";
 
     if (isAdmin()) {
+
       const input = document.createElement("input");
       input.className = "waiter-name-input";
       input.value = waiter.name;
       input.addEventListener("change", () => {
         waiter.name = input.value.trim() || waiter.name;
+
         saveState();
         updatePendingGrid(weekId);
         updateSessionUI();
+        syncUserSelect();
+        saveState();
+        renderWeek();
+
       });
       nameWrap.append(input);
     } else {
@@ -231,6 +266,7 @@ function renderWeek() {
       });
 
       adminCheck.addEventListener("change", () => {
+
         if (!isAdmin()) return;
         cellState.adminApproved = adminCheck.checked;
         saveState();
@@ -304,6 +340,7 @@ function init() {
       login();
     }
   });
+
 }
 
 init();

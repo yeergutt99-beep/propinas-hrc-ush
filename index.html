@@ -7,63 +7,76 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <section id="loginScreen" class="login-screen">
-      <div class="login-card">
-        <h1>Hard Rock Ushuaia</h1>
-        <p>Control de entrega de propinas</p>
-        <label>
-          Usuario
-          <input id="loginInput" type="text" placeholder="admin9410 o Camarero 1" />
-        </label>
-        <button id="loginBtn" type="button">Ingresar</button>
-        <p class="login-help">Admin: <strong>admin9410</strong> · Camareros: <strong>Camarero 1..10</strong></p>
-        <p id="loginMessage" class="login-message"></p>
+<section id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <h1>Hard Rock Ushuaia</h1>
+    <p>Control de entrega de propinas</p>
+    <label>
+      Usuario
+      <input id="loginInput" type="text" placeholder="admin9410 o Camarero 1" />
+    </label>
+    <button id="loginBtn" type="button">Ingresar</button>
+    <p class="login-help">Admin: <strong>admin9410</strong> · Camareros: <strong>Camarero 1..10</strong></p>
+    <p id="loginMessage" class="login-message"></p>
+  </div>
+</section>
+
+<div id="appShell" class="app-shell hidden">
+  <header class="topbar">
+    <div>
+      <h1>Hard Rock Ushuaia</h1>
+      <p>Control de entrega de propinas</p>
+    </div>
+    <div class="session-panel">
+      <label>
+        Semana
+        <input type="week" id="weekPicker" />
+      </label>
+
+      <label>
+        Perfil
+        <select id="roleSelect">
+          <option value="admin">Admin</option>
+          <option value="camarero">Camarero</option>
+        </select>
+      </label>
+
+      <label>
+        Usuario
+        <select id="userSelect"></select>
+      </label>
+
+      <div id="activeUserPill" class="active-user"></div>
+      <button id="logoutBtn" type="button">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="section-header">
+        <h2>Checklist semanal</h2>
+        <p>
+          Un día queda <strong>completo</strong> cuando el camarero marca su estado y
+          el admin confirma.
+        </p>
+      </div>
+      <div class="table-wrap">
+        <table id="checklistTable">
+          <thead></thead>
+          <tbody></tbody>
+        </table>
       </div>
     </section>
 
-    <div id="appShell" class="app-shell hidden">
-      <header class="topbar">
-        <div>
-          <h1>Hard Rock Ushuaia</h1>
-          <p>Control de entrega de propinas</p>
-        </div>
-        <div class="session-panel">
-          <label>
-            Semana
-            <input type="week" id="weekPicker" />
-          </label>
-
-          <div id="activeUserPill" class="active-user"></div>
-          <button id="logoutBtn" type="button">Cerrar sesión</button>
-        </div>
-      </header>
-
-      <main>
-        <section class="card">
-          <div class="section-header">
-            <h2>Checklist semanal</h2>
-            <p>
-              Un día queda <strong>completo</strong> cuando el camarero marca su estado y
-              el admin confirma.
-            </p>
-          </div>
-          <div class="table-wrap">
-            <table id="checklistTable">
-              <thead></thead>
-              <tbody></tbody>
-            </table>
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="section-header">
-            <h2>Personas pendientes por día</h2>
-            <p>Vista general para todos los perfiles.</p>
-          </div>
-          <div id="pendingGrid" class="pending-grid"></div>
-        </section>
-      </main>
-    </div>
+    <section class="card">
+      <div class="section-header">
+        <h2>Personas pendientes por día</h2>
+        <p>Vista general para todos los perfiles.</p>
+      </div>
+      <div id="pendingGrid" class="pending-grid"></div>
+    </section>
+  </main>
+</div>
 
     <template id="dayCellTemplate">
       <div class="cell-content">

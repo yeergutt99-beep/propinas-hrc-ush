@@ -8,7 +8,9 @@
   --gray-500: #6d7684;
   --ok: #1f8d4f;
   --pending: #b07b00;
+
   --error: #b00020;
+
 }
 
 * {
@@ -22,6 +24,7 @@ body {
   color: var(--black);
   min-height: 100vh;
 }
+
 
 .hidden {
   display: none !important;
@@ -119,10 +122,10 @@ button:hover {
 
 .session-panel {
   display: grid;
-  grid-template-columns: repeat(2, minmax(140px, 1fr));
-  gap: 0.75rem;
-  align-items: end;
-  width: min(580px, 100%);
+grid-template-columns: repeat(3, minmax(130px, 1fr));
+gap: 0.75rem;
+align-items: end;
+width: min(580px, 100%);
 }
 
 .active-user {
@@ -133,6 +136,7 @@ button:hover {
   padding: 0.45rem 0.75rem;
   font-size: 0.85rem;
   font-weight: 600;
+}
 }
 
 main {
@@ -166,7 +170,8 @@ table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 0.55rem;
-  min-width: 900px;
+
+
 }
 
 thead th {
@@ -194,7 +199,9 @@ tbody td:last-child {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
+
   min-width: 150px;
+
 }
 
 .waiter-name-input {
@@ -206,7 +213,8 @@ tbody td:last-child {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
-  min-width: 145px;
+
+  min-width: 165px;
 }
 
 .waiter-status,
@@ -274,17 +282,17 @@ tbody td:last-child {
 @media (max-width: 950px) {
   .topbar {
     flex-direction: column;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-  }
+border-bottom-left-radius: 20px;
+border-bottom-right-radius: 20px;
+}
 
-  .session-panel {
-    width: 100%;
-  }
+.session-panel {
+  width: 100%;
+}
 
-  main {
-    padding: 0.85rem;
-  }
+main {
+  padding: 0.85rem;
+}
 }
 
 @media (max-width: 680px) {
@@ -316,4 +324,5 @@ tbody td:last-child {
   .state-pill {
     font-size: 0.78rem;
   }
+}
 }
